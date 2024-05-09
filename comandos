@@ -1,0 +1,21 @@
+watch cat /sys/class/drm/card0/device/mem_busy_percent # monitorar a gpu da amd
+ollama serve (iniciar o servidor do ollama)
+fazer um docker file (feito)
+comando docker run:
+docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch:latest bash
+
+Dockerfile: rocm_ollama_container
+
+# install pytorch, ollama and uses it with rocm
+FROM rocm/pytorch:latest
+COPY . /tg1
+LABEL authors="isaque"
+RUN make /tg1 &&\
+    pip install ollama &&\
+    curl -fsSL https://ollama.com/install.sh | sh
+ENTRYPOINT ["top", "-b"]
+
+pip install datasets==2.13
+pip install pyarrow>=8.0.0
+pip install --upgrade transformers
+pip install --upgrade numpy
